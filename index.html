@@ -1,0 +1,295 @@
+<html>
+<head>
+<title>Locals Vegas!</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA0S2k5nwptv3YEmX9u228yRQdoZOChzCBlzRvgR8ZprmcD2m2QRSUs_j_-E2xLt9kazlwzb4l2GZzFw" type="text/javascript">
+</script>    
+<script type="text/javascript">
+//<![CDATA[
+    var map = null;
+    var geocoder = null;
+	var sidebar_html = "";
+	var hilite_html = "";
+	var gmarkers = [];
+	var index = 0;
+	var last; //for random generation
+	var d = new Date();
+	var curr_year = "Site Design © " +d.getFullYear()+" <a href='http://www.jsfour.com'>James Smoot IV</a>. All rights reserved worldwide.";
+	//var host_name = location.hostname+ "is not responsible for posted content, all ofensive material will be removed.";
+	
+function load() {
+ 
+      if (GBrowserIsCompatible()) {
+        map = new GMap2(document.getElementById("map"));
+		map.addControl(new GSmallMapControl());
+		map.addControl(new GMapTypeControl());
+        map.setCenter(new GLatLng(36.104505, -115.137876), 11);
+        geocoder = new GClientGeocoder();
+		
+		
+		
+		//This will grab all needed info from the xml file expection is
+		/*<markers>
+	  <marker fname="Firstname" lname="Lastname" lat="36.15309" lng="-115.153954" address="an address" type="E,O,R, or D(see cre8xml for more info)" title="What to call the marker" nfo="Discription"></marker>
+	 	</markers>
+*/
+		GDownloadUrl("markers.xml", function(data, responseCode) {
+		  var xml = GXml.parse(data);
+		  var markers = xml.documentElement.getElementsByTagName("marker");
+		  for (var i = 0; i < markers.length; i++) {
+			var fname = markers[i].getAttribute("fname");
+			//fname = fname.toLowerCase();
+			var lname = markers[i].getAttribute("lname");
+			//lname = lname.toLowerCase();
+			var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")),
+									parseFloat(markers[i].getAttribute("lng")));
+			
+			var addy = markers[i].getAttribute("address");
+			var type = markers[i].getAttribute("type");
+			
+			var title = markers[i].getAttribute("title");
+			var nfo = markers[i].getAttribute("nfo");
+			var icon = fname+"_"+lname;
+			var pth = lname+"_"+fname;
+			addMarker(point,addy,nfo,icon,title,pth,type);
+			
+		  }//for
+		 
+		 for(var j = 0; j < 4; j++){
+		  	  var ran = get_random()
+		 	  if(ran == last){
+			 	ran = get_random
+				}
+			  var pix = gmarkers[ran].icon;
+			  //alert(pix);
+			  hilite_html += ' <a href="javascript:myclick(' + ran + ')"><img src="locpix/' + gmarkers[ran].icon + '.jpg" height="50px" width="50px"/></a>'
+			 last = ran
+		  	  }//for
+		document.getElementById("highlight").innerHTML = hilite_html;//fills highlight
+		document.getElementById("sidebar").innerHTML = sidebar_html;//fills sidbar 
+		document.getElementById("theyear").innerHTML = curr_year;//get the current date year only
+		//document.getElementById("hname").innerHTML = curr_year;//fills hostname
+	});
+	
+	
+      }
+    }
+
+function get_random()
+	{
+    var ranNum= Math.floor(Math.random()*index);
+    return ranNum;
+	}
+
+function addMarker(point,address,nfo,icon, title,pth,type){//does the marker creation dirty work
+	if (point){
+			var marker = new GMarker(point,type);
+			 if (type) {
+	      		marker.type = type;
+           		} else {//not marker
+              marker.type = "O";
+           	}//else	
+			marker.title = title;
+			marker.icon = icon;
+			map.addOverlay(marker);
+			GEvent.addListener(marker, "click", function() {
+			marker.openInfoWindowHtml("<p style='font-family: Arial, Helvetica, sans-serif; font-size: 12px; height: 300px;width:200px;'><img width='75px' height='75px' src='locpix/"+icon+".jpg'>"+"<br><a href='"+pth+"/index.html' target='new'>"+title+"</a><br><br>"+nfo+"<br><br>"+address+ "</p><br>");
+				});
+				gmarkers[index] = marker;
+        sidebar_html += '<a href="javascript:myclick(' + index + ')">' + title + '</a><br>';
+        //alert(gmarkers[index].type);
+		index++;
+		
+		}
+		
+	}
+
+	
+	//to popup box when sidebar clicked
+	function myclick(w) {
+        GEvent.trigger(gmarkers[w], "click");
+      }
+		
+function Catagory(cat){//allows to add and remove to sidebar based on catagory
+
+	map.closeInfoWindow();
+
+	   var panel = document.getElementById("sidebar");
+           panel.innerHTML = null;
+           var sidebar_html = "";
+
+
+	   if (document.getElementById(cat).checked==false) { // hide the marker
+	      for (var i=0;i<gmarkers.length;i++) {
+	         if (gmarkers[i].type==cat)  {
+	            map.removeOverlay(gmarkers[i]);
+	         }
+	      }
+	   } else { // show the marker again
+	      for (var i=0;i<gmarkers.length;i++) {
+	         if (gmarkers[i].type==cat)  {
+	            map.addOverlay(gmarkers[i]);
+	         }
+	      }
+	   }
+
+	   for (var i=0; i<gmarkers.length;i++) {
+              if (document.getElementById(gmarkers[i].type).checked)  {
+                 if (gmarkers[i].type != "B") {
+                    sidebar_html += '<a href="javascript:myclick(' + i + ')">' + gmarkers[i].title + '</a><br>';
+                 }
+              }
+          }
+          panel.innerHTML = sidebar_html;
+	}
+    </script>
+	
+
+<style type="text/css">
+<!--
+body {
+	background-color: #d5d5d5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-image: url(images/bg.gif);
+}
+
+#box{
+	width: 500px;
+	height: 500px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+#copytxt{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#000000;
+	
+}
+
+#container {
+	position:absolute;
+	z-index:1;
+	left: 686px;
+	top: 118px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	overflow: auto;
+	width: 305px; height: 518px;     
+   	background-color: #d5d5d5;       
+   	filter:alpha(opacity=50);
+   	-moz-opacity:0.50;
+   	opacity: 0.50;
+	padding: 8px;
+	scrollbar-base-color: #d5d5d5;
+	scrollbar-arrow-color: #FFFFFF;
+	scrollbar-3dlight-color: #d5d5d5;
+	scrollbar-darkshadow-color: #d5d5d5;
+	scrollbar-face-color: #d5d5d5;
+	scrollbar-highlight-color: #d5d5d5;
+	scrollbar-shadow-color: #d5d5d5;
+	scrollbar-track-color: #d5d5d5;
+	
+	}
+#container2 {
+	position:absolute;
+	z-index:1;
+	left: 686px;
+	top: 660px;
+	-moz-top: 660px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	overflow: auto;
+	width: 305px; height: 125px;     
+   	background-color: #d5d5d5;       
+   	filter:alpha(opacity=50);
+   	-moz-opacity:0.50;
+   	opacity: 0.50;
+	padding: 8px;
+	scrollbar-base-color: #d5d5d5;
+	scrollbar-arrow-color: #FFFFFF;
+	scrollbar-3dlight-color: #d5d5d5;
+	scrollbar-darkshadow-color: #d5d5d5;
+	scrollbar-face-color: #d5d5d5;
+	scrollbar-highlight-color: #d5d5d5;
+	scrollbar-shadow-color: #d5d5d5;
+	scrollbar-track-color: #d5d5d5;
+	}
+
+
+-->
+</style>
+</head>
+<body onLoad="load()" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table id="Table_01" width="800" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#637074">
+	<tr height="0">
+		<td align="left" valign="top">
+			<img src="images/locallv_template_01.gif" width="709" height="112" alt=""></td>
+		<td rowspan="2" align="left" valign="top" background="images/border.gif">
+			<img src="images/locallv_template_02.gif" width="91" height="569" alt=""></td>
+	</tr>
+	<tr height="100%" valign="top">
+	  <td bgcolor="#d5d5d5" align="left" valign="top" width="100%">
+		
+		<table width="200" border="0" cellpadding="10px">
+		  <tr>
+			<td valign="top"><div id="map" style="width: 650px; height: 650px"></div>
+			
+			</td>
+		  </tr>
+		</table>	  </td>
+	</tr>
+	<tr height="0">
+		<td align="left" valign="top"><img src="images/locallv_template_04.gif" width="709" height="31" alt=""></td>
+		<td>
+			<img src="images/locallv_template_05.gif" width="91" height="31" alt="">	  </td>
+  </tr>
+	<tr>
+	<td></td>
+	</tr>
+</table>
+<div id="container" align="right">
+
+<form action="">
+
+
+<h3>Type:</h3>
+               Dining <input type="checkbox" name="Dining" id="D" onClick="Catagory('D')" checked="checked" /><br />
+			   Entertainment <input type="checkbox" name="Entertainment" id="E" onClick="Catagory('E')" checked="checked" /><br />
+			   Recreation <input type="checkbox" name="Recreation" id="R" onClick="Catagory('R')" checked="checked" /><br />
+			   Other <input type="checkbox" name="Other" id="O" onClick="Catagory('O')" checked="checked" /><br />
+               
+  </form>
+				<h3>Locations:</h3>
+				<div id="sidebar">
+				
+				</div>
+				
+				
+				
+			
+</div>
+<div id="container2" align="right">
+	<h3>Highlights:</h3>
+			<div id="highlight"></div>
+			</div>
+<div align="center" id="copytxt">
+<p>This page powered by Javascript, and is intended for educational use only.<br>
+The domain is not responsible for posted content, all ofensive material will be removed.<br>
+Photo credits: <a href="http://www.savensail.com" target="new">Lewis Johnston</a>, Brett Mathews, and Everyone in the Spring 2007 UNLV JOUR 333 class. <br> All code is open source feel free to use as needed.
+<div id="theyear"></div>
+<table width="200" border="0">
+  <tr>
+    <td><a href="http://www.sxc.hu" target="new"><img src="http://www.sxc.hu/ads/sxc_hu_88x31.gif" style="border:thin;filter:alpha(opacity=50);-moz-opacity:0.50;opacity: 0.50;"/></a></td>
+    <td><a href="http://www.jsfour.com" target="new"><img src="images/jsfour_credit.gif" style="border:thin;filter:alpha(opacity=50);-moz-opacity:0.50;opacity: 0.50;"/></a></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+
+</p>
+</div>
+</body>
+</html>

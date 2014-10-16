@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA0S2k5nwptv3YEmX9u228yRQdoZOChzCBlzRvgR8ZprmcD2m2QRSUs_j_-E2xLt9kazlwzb4l2GZzFw" type="text/javascript">
+</script>    
+<script type="text/javascript">
+//<![CDATA[
+    var sidebar_html = "";
+	var index = 0;
+	var last; //for random generation
+	
+function load() {
+ 
+      if (GBrowserIsCompatible()) {
+        //This will grab all needed info from the xml file expection is
+		/*<markers>
+	  <marker fname="Firstname" lname="Lastname" lat="36.15309" lng="-115.153954" address="an address" type="E,O,R, or D(see cre8xml for more info)" title="What to call the marker" nfo="Discription"></marker>
+	 	</markers>
+*/
+		GDownloadUrl("markers.xml", function(data, responseCode) {
+		  var xml = GXml.parse(data);
+		  var markers = xml.documentElement.getElementsByTagName("marker");
+		  for (var i = 0; i < markers.length; i++) {
+			var fname = markers[i].getAttribute("fname");
+			//fname = fname.toLowerCase();
+			var lname = markers[i].getAttribute("lname");
+			//var lname = lname.toLowerCase();
+			var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")),
+									parseFloat(markers[i].getAttribute("lng")));
+			
+			var addy = markers[i].getAttribute("address");
+			var type = markers[i].getAttribute("type");
+			
+			var title = markers[i].getAttribute("title");
+			var nfo = markers[i].getAttribute("nfo");
+			var icon = fname+"_"+lname;
+			var pth = lname+"_"+fname;
+			//alert(pth);
+			sidebar_html += i+lname+"_"+fname+"<br>";		
+			//index = i;	
+		  }//for
+		document.getElementById("sidebar").innerHTML = sidebar_html;//fills sidbar 
+	});
+	
+	
+      }
+    }//load
+	</script>
+<title>SHOW ME NAMES</title>
+</head>
+
+<body onload="load()">
+<div id="sidebar"></div>
+</body>
+</html>

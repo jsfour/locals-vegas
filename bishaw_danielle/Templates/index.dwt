@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Downtown Coffe Co.</title>
+<!-- TemplateEndEditable -->
+<style type="text/css">
+<!--
+body {
+	background-color: #000000;
+}
+.style1 {color: #FFFFFF}
+-->
+</style>
+<link href="../nav_bar.css" rel="stylesheet" type="text/css" />
+<!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable -->
+<style type="text/css">
+<!--
+.style2 {color: #000000}
+-->
+</style>
+</head>
+
+<body>
+<table width="800" align="center" bordercolor="#000000" bgcolor="#000000">
+  <tr align="center" valign="top" bordercolor="#000000" bgcolor="#000000">
+    <td width="875" height="120"><img src="../images/title_graphic2.png" alt="Title" width="850" height="152" /></td>
+  </tr>
+</table>
+<div align="right">
+  <table width="800" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="185" height="650" valign="top"><p align="center" class="style1"><img src="../images/navbar.png" alt="Navigation" width="195" height="405" border="0" usemap="#Map" /></p>
+      <p align="center" class="style1"> <img src="../images/logo_graphic.png" alt="Logo" width="122" height="104" /></p></td>
+      <td width="680" valign="top"><!-- TemplateBeginEditable name="ImageAndText" --><!-- TemplateEndEditable --><img src="../images/localslvlink.png" alt="Locals Las Vegas Site" width="300" height="100" border="0" usemap="#Map2" /></td>
+    </tr>
+  </table>
+  <map name="Map2" id="Map2">
+    <area shape="rect" coords="5,11,290,88" href="../../index.html" />
+  </map>
+</div>
+
+<map name="Map" id="Map"><area shape="rect" coords="15,36,182,78" href="../index.html" />
+<area shape="rect" coords="12,100,180,142" href="../history.html" /><area shape="rect" coords="9,163,186,204" href="../events.html" /><area shape="rect" coords="11,230,183,265" href="../services.html" /><area shape="rect" coords="15,293,182,331" href="../location.html" />
+</map></body>
+</html>

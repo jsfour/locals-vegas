@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>Google Maps</title>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA0S2k5nwptv3YEmX9u228yRQdoZOChzCBlzRvgR8ZprmcD2m2QRSUs_j_-E2xLt9kazlwzb4l2GZzFw" type="text/javascript"></script>
+  </head>
+  <body onunload="GUnload()">
+
+    
+    <div id="message">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>&lt;markers&gt;<br></div>
+
+
+    <script type="text/javascript">
+    //<![CDATA[
+    
+    if (GBrowserIsCompatible()) { 
+
+      alert("THIS SITE WILL CREATE THE XML FILE TO BE USED WITH THE LOCALS VEGAS SITE, FILL IN THE BLANKS. TYPE DEATH INTO THE FNAME FIELD AND CYCLE THROUGH ALL FIELDS TO KILL THE LOOP. TYPE SHOULD BE: R FOR RECREATION, O FOR OTHER, D FOR DINING, AND E FOR ENTERTAINMENT. THESE MUST BE IN ALL CAPS. ADDRESS SHOULD LOOK LIKE 1130 UNIVERSITY ROAD LAS VEGAS NV 89119");
+      // ====== Create a Client Geocoder ======
+      var geo = new GClientGeocoder(); 
+
+      // ====== Array for decoding the failure codes ======
+      var reasons=[];
+      reasons[G_GEO_SUCCESS]            = "Success";
+      reasons[G_GEO_MISSING_ADDRESS]    = "Missing Address: The address was either missing or had no value.";
+      reasons[G_GEO_UNKNOWN_ADDRESS]    = "Unknown Address:  No corresponding geographic location could be found for the specified address.";
+      reasons[G_GEO_UNAVAILABLE_ADDRESS]= "Unavailable Address:  The geocode for the given address cannot be returned due to legal or contractual reasons.";
+      reasons[G_GEO_BAD_KEY]            = "Bad Key: The API key is either invalid or does not match the domain for which it was given";
+      reasons[G_GEO_TOO_MANY_QUERIES]   = "Too Many Queries: The daily geocoding quota for this site has been exceeded.";
+      reasons[G_GEO_SERVER_ERROR]       = "Server error: The geocoding request could not be successfully processed.";
+      reasons[403]                      = "Error 403: Probably an incorrect error caused by a bug in the handling of invalid JSON.";
+      
+      // ====== Geocoding ======
+      function getAddress(fname,lname,search, type,title,nfo) {
+	 // if(fname != 'DEATH'){
+        geo.getLocations(search, function (result)
+          { 
+            // If that was successful
+            if (result.Status.code == G_GEO_SUCCESS) {
+              // Lets assume that the first marker is the one we want
+              var p = result.Placemark[0].Point.coordinates;
+              var lat=p[1];
+              var lng=p[0];
+              // Display the results in XML format
+              //var xml = 'hello WORLD';
+			  var xml = '&nbsp;&nbsp;&lt;marker fname="' +fname+ '" lname="'+lname+'" lat="'+lat+'" lng="'+lng+'" address="'+search+'" type="'+type+'" title="'+title+'" nfo="'+nfo+'"/&gt;<br>'
+              document.getElementById("message").innerHTML += xml;
+            }
+            // ====== Decode the error status ======
+            else {
+              var reason="Code "+result.Status.code;
+              if (reasons[result.Status.code]) {
+                reason = reasons[result.Status.code]
+              } 
+                var xml = '&nbsp;&nbsp;&lt;marker fname="' +fname+ '" lname="'+lname+'" address="' + search + '" error="' +reason+ '"/&gt;<br>';
+                document.getElementById("message").innerHTML += xml;
+            }
+		//}//if!death
+		if(fname != 'DEATH'){
+            theNext();
+			}
+		else {
+          document.getElementById("message").innerHTML += "&lt;/markers&gt;";
+			}
+			
+          }
+        );
+      }
+
+
+
+     function theNext() {
+       //get all info
+		 var fname = prompt("FName", "TYPE DEATH TO END");
+		 var lname = prompt("LNAME", "LNAME");
+     	 var addresses = prompt("Address", "1130 UNIVERSITY ROAD LAS VEGAS NV 89119");
+	 	 var type = prompt("type", "type");
+	 	 var title = prompt("Title", "Title");
+	 	 var nfo = prompt("nfo", "nfo");
+		 //send it to the address function
+		 
+         getAddress(fname,lname,addresses, type, title, nfo);
+        
+      }
+
+
+      theNext();
+  
+
+
+    }
+
+    else {
+      alert("TURN ON JAVA");
+    }
+
+    //]]>
+    </script>
+  </body>
+
+</html>
+
+
+
